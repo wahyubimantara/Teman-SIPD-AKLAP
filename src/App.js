@@ -16,7 +16,7 @@ import Profile from "./pages/profile/Profile";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
-
+// ujicoba
   return (
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>

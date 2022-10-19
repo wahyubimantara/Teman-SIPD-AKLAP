@@ -42,6 +42,12 @@ const Sidebar = () => {
               <span>users</span>
             </li>
           </Link>
+          <Link to="/inputsaldoawal" style={{ textDecoration: "none" }}>
+            <li>
+              <AssignmentIcon className="icon" />
+              <span>Input Saldo Awal</span>
+            </li>
+          </Link>
           <Link to="/jurnal2approve" style={{ textDecoration: "none" }}>
             <li>
               <AssignmentIcon className="icon" />

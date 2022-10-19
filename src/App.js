@@ -13,10 +13,11 @@ import BukuBesar from "./pages/buku-besar/BukuBesar";
 import Jurnal2Approve from "./pages/jurnal2approve/Jurnal2Approve";
 import Neraca from "./pages/neraca/Neraca";
 import Profile from "./pages/profile/Profile";
+import InputSaldoAwal from "./pages/inputsaldoawal/InputSaldoAwal";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
-// ujicoba
+
   return (
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>
@@ -33,6 +34,11 @@ function App() {
                 path="new"
                 element={<New inputs={userInputs} title="Add New User" />}
               />
+            </Route>
+
+             {/* input saldo awal */}
+             <Route path="inputSaldoAwal">
+              <Route index element={<InputSaldoAwal />} />
             </Route>
 
             {/* jurnal to approve */}

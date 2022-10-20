@@ -8,6 +8,7 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import BookIcon from '@mui/icons-material/Book';
 import StyleIcon from '@mui/icons-material/Style';
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import InputIcon from '@mui/icons-material/Input';
 import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
@@ -44,7 +45,7 @@ const Sidebar = () => {
           </Link>
           <Link to="/inputsaldoawal" style={{ textDecoration: "none" }}>
             <li>
-              <AssignmentIcon className="icon" />
+              <InputIcon className="icon" />
               <span>Input Saldo Awal</span>
             </li>
           </Link>

@@ -8,7 +8,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ApprovalIcon from "@mui/icons-material/Approval";
 
 import { styled } from "@mui/material/styles";
-
+import { useState, useEffect } from "react";
+import axios from '../../axios'
 
 const top100Films = [
   { label: "The Shawshank Redemption", year: 1994 },
@@ -187,8 +188,37 @@ const StyledDatePicker = styled(DatePicker)({
   }
 });
 
-const Belanja = () => {
+function Belanja(){
+  const [SKPD, setSKPD] = useState([]);
+   useEffect(() => {
+      axios.get('skpd').then((response) => {
+        let skpds = response.data.data.map(v=>{ return { label: v.skpd, key: v.kodeSkpd } } )
+        setSKPD(skpds);
+      });
+   }, []);
+
+
+  // const [ setGetResult] = useState(null);
+  // const fortmatResponse = (res) => {
+  //   return JSON.stringify(res, null, 2);
+  // };
+  // async function getSKPD() {
+  //   try {
+  //     const res = await axios.get("/skpd");
+
+  //     const result = {
+  //       data: res.data,
+  //     };
+
+  //     setGetResult(fortmatResponse(result));
+  //   } catch (err) {
+  //     setGetResult(fortmatResponse(err.response?.data || err));
+  //   }
+  // }
+
+// const Belanja = () => {
   const [value, setValue] = React.useState(null);
+  
   return (
       <div className="belanja">
         <Grid container spacing={4}>
@@ -196,8 +226,9 @@ const Belanja = () => {
             <StyledAutocomplete
               disablePortal
               id="skpd"
-              options={top100Films}
-              renderInput={(params) => <TextField {...params} label="SKPD" />}
+              options={SKPD}
+
+              renderInput={(params) => <TextField {...params} label="skpd" />}
             />
           </Grid>
 
@@ -270,7 +301,9 @@ const Belanja = () => {
           </Grid>
 
 
-          <Grid item xs={6}></Grid>
+          <Grid item xs={6}>
+         
+          </Grid>
       
           <Grid item xs={12}>
         

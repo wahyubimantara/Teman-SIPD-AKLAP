@@ -5,7 +5,6 @@ import Belanja from "../../components/belanja/Belanja";
 import TabelPendapatan from "../../components/tabel-pendapatan/Tabel-Pendapatan";
 
 
-
 const Jurnal2Approve = () => {
   return (
     <div className="jurnal2approve">
@@ -13,7 +12,7 @@ const Jurnal2Approve = () => {
       <div className="listContainer">
         <Navbar/>
         <div className="listContainer2">
-          <Belanja />
+          <Belanja  />
         </div>
         <div className="listContainer2">
           <TabelPendapatan />

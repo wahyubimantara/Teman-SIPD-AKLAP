@@ -12,7 +12,7 @@ const BukuBesar = () => {
       <div className="listContainer">
         <Navbar/>
         <div className="listContainer2">
-          <SKPD></SKPD>
+          <SKPD />
         </div>
         <div className="listContainer2">
           <div className="listTitle">Tabel Hasil</div>

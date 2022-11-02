@@ -9,7 +9,7 @@ import ApprovalIcon from "@mui/icons-material/Approval";
 
 import { styled } from "@mui/material/styles";
 import { useState, useEffect } from "react";
-import axios from '../../axios'
+import axios from "../../axios";
 
 const top100Films = [
   { label: "The Shawshank Redemption", year: 1994 },
@@ -146,25 +146,25 @@ const StyledAutocomplete = styled(Autocomplete)({
     // This lines up the label with the initial cursor position in the input
     // after changing its padding-left.
     transform: "translate(14px, 20px) scale(1);",
-    color:"#008000;"
+    color: "#008000;",
   },
   "& .MuiAutocomplete-inputRoot": {
     color: "purple",
     // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
     '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
       // Default left padding is 6px
-      paddingLeft: 6
+      paddingLeft: 6,
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgba(224, 224, 224, 1);"
+      borderColor: "rgba(224, 224, 224, 1);",
     },
     "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "blue"
+      borderColor: "blue",
     },
     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "purple"
-    }
-  }
+      borderColor: "purple",
+    },
+  },
 });
 
 // styling DatePicker
@@ -174,149 +174,180 @@ const StyledDatePicker = styled(DatePicker)({
     // This lines up the label with the initial cursor position in the input
     // after changing its padding-left.
     transform: "translate(14px, 20px) scale(1);",
-    color:"#008000;"
+    color: "#008000;",
   },
   "& .MuiOutlinedInput-notchedOutline": {
-    borderColor: "rgba(224, 224, 224, 1);"
+    borderColor: "rgba(224, 224, 224, 1);",
   },
   "&:hover .MuiOutlinedInput-notchedOutline": {
-    borderColor: "blue"
+    borderColor: "blue",
   },
   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-    borderColor: "purple"
-  
-  }
+    borderColor: "purple",
+  },
 });
 
-function Belanja(){
+// styling Textfield
+const StyledTextField = styled(TextField)({
+  "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
+    // Default transform is "translate(14px, 20px) scale(1)""
+    // This lines up the label with the initial cursor position in the input
+    // after changing its padding-left.
+    transform: "translate(14px, 20px) scale(1);",
+    color: "#008000;",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    borderColor: "rgba(224, 224, 224, 1);",
+  },
+  "&:hover .MuiOutlinedInput-notchedOutline": {
+    borderColor: "blue",
+  },
+  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: "purple",
+  },
+});
+
+function Belanja() {
   const [SKPD, setSKPD] = useState([]);
-   useEffect(() => {
-      axios.get('skpd').then((response) => {
-        let skpds = response.data.data.map(v=>{ return { label: v.skpd, key: v.kodeSkpd } } )
-        setSKPD(skpds);
+  const [unitSkpd, setunitSkpd] = useState([]);
+  useEffect(() => {
+    axios.get("skpd").then((response) => {
+      let skpds = response.data.data.map((v) => {
+        return { label: v.skpd, key: v.kodeSkpd };
       });
-   }, []);
+      setSKPD(skpds);
+    });
 
+    axios.get("unitSkpd").then((response) => {
+      let unitSkpds = response.data.data.map((v) => {
+        return { label: v.unitSkpd,key: v.kodeUnitSkpd,   };
+      });
+      setunitSkpd(unitSkpds);
+    });
+  }, []);
 
-  // const [ setGetResult] = useState(null);
-  // const fortmatResponse = (res) => {
-  //   return JSON.stringify(res, null, 2);
-  // };
-  // async function getSKPD() {
-  //   try {
-  //     const res = await axios.get("/skpd");
+  // tanggal mulai-selesai
+  const [value_mulai, setValue_mulai] = React.useState(null);
+  const [value_selesai, setValue_selesai] = React.useState(null);
 
-  //     const result = {
-  //       data: res.data,
-  //     };
-
-  //     setGetResult(fortmatResponse(result));
-  //   } catch (err) {
-  //     setGetResult(fortmatResponse(err.response?.data || err));
-  //   }
-  // }
-
-// const Belanja = () => {
-  const [value, setValue] = React.useState(null);
-  
+  // skpd
+  const [value_skpd, setValue_skpd] = React.useState(null);
+  // unit skpd
+  const [value_unitSkpd, setValue_unitSkpd] = React.useState(null);
+  // filter
+  const [value_filter, setValue_filter] = React.useState(null);
+  const handleChange = (event) => {
+    setValue_filter(event.target.value);
+  };
   return (
-      <div className="belanja">
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <StyledAutocomplete
-              disablePortal
-              id="skpd"
-              options={SKPD}
+    <div className="belanja">
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <StyledAutocomplete
+            disablePortal
+            value={value_skpd}
+            onChange={(event, newValue) => {
+              setValue_skpd(newValue);
+              console.log(newValue);
+            }}
+            id="skpd"
+            options={SKPD}
+            renderInput={(params) => <TextField {...params} label="SKPD" />}
+          />
+        </Grid>
 
-              renderInput={(params) => <TextField {...params} label="skpd" />}
-            />
-          </Grid>
+        <Grid item xs={6}>
+          <StyledAutocomplete
+            disablePortal
+            value={value_unitSkpd}
+            onChange={(event, newValue) => {
+              setValue_unitSkpd(newValue);
+              console.log(newValue);
+            }}
+            id="unit"
+            options={unitSkpd}
+            renderInput={(params) => (
+              <TextField {...params} label="Unit SKPD" />
+            )}
+          />
+        </Grid>
 
-          <Grid item xs={6}>
-            <StyledAutocomplete
-              disablePortal
-              id="unit"
-              options={top100Films}
-              renderInput={(params) => <TextField {...params} label="Unit SKPD" />}
-            />
-          </Grid>
+        <Grid item xs={6}>
+        <StyledTextField
+          fullWidth
+          id="filter"
+          label="Filter By"
+          value={value_filter}
+          onChange={handleChange}
+        />
+        </Grid>
 
-          <Grid item xs={6}>
-            <StyledAutocomplete
-              disablePortal
-              id="filter"
-              options={top100Films}
-              // sx={4}
+        <Grid item xs={3}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <StyledDatePicker
+              label="Mulai"
+              value={value_mulai}
+              onChange={(newValue) => {
+                setValue_mulai(newValue);
+              }}
               renderInput={(params) => (
-                <TextField {...params} label="Filter By" />
+                <TextField {...params} sx={{ svg: { color: "#008000;" } }} />
               )}
             />
-          </Grid>
-
-          
-          <Grid item xs={3}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <StyledDatePicker
-                label="Mulai"
-                value={value}
-                onChange={(newValue) => {
-                  setValue(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} sx={{svg: { color: "#008000;" }}}/>}
-              />
-            </LocalizationProvider>
-          </Grid>
-          <Grid item xs={3}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <StyledDatePicker
-                label="Selesai"
-                value={value}
-                onChange={(newValue) => {
-                  setValue(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} sx={{svg: { color: "#008000;" }}}/>}
-              />
-            </LocalizationProvider>
-          </Grid>
-
-          <Grid item xs={3}>
-            <StyledAutocomplete
-              disablePortal
-              id="status"
-              options={top100Films}
-              renderInput={(params) => <TextField {...params} label="Status Dokumen" />}
-            />
-          </Grid>
-
-          <Grid item xs={3}>
-            <StyledAutocomplete
-              disablePortal
-              id="jenis-dokumen"
-              options={top100Films}
-              // sx={4}
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={3}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <StyledDatePicker
+              label="Selesai"
+              value={value_selesai}
+              onChange={(newValue) => {
+                setValue_selesai(newValue);
+              }}
               renderInput={(params) => (
-                <TextField {...params} label="Jenis Dokumen" />
+                <TextField {...params} sx={{ svg: { color: "#008000;" } }} />
               )}
             />
-          </Grid>
+          </LocalizationProvider>
+        </Grid>
 
+        <Grid item xs={3}>
+          <StyledAutocomplete
+            disablePortal
+            id="status"
+            options={top100Films}
+            renderInput={(params) => (
+              <TextField {...params} label="Status Dokumen" />
+            )}
+          />
+        </Grid>
 
-          <Grid item xs={6}>
-         
-          </Grid>
-      
-          <Grid item xs={12}>
-        
-          <Button sx={{"float": "right"}} variant="outlined" startIcon={<ApprovalIcon />}>
+        <Grid item xs={3}>
+          <StyledAutocomplete
+            disablePortal
+            id="jenis-dokumen"
+            options={top100Films}
+            // sx={4}
+            renderInput={(params) => (
+              <TextField {...params} label="Jenis Dokumen" />
+            )}
+          />
+        </Grid>
+
+        <Grid item xs={6}></Grid>
+
+        <Grid item xs={12}>
+          <Button
+            sx={{ float: "right" }}
+            variant="outlined"
+            startIcon={<ApprovalIcon />}
+          >
             Terapkan
           </Button>
-          
-      
-          </Grid>
-          
         </Grid>
-      </div>
+      </Grid>
+    </div>
   );
-};
+}
 
 export default Belanja;

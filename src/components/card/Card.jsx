@@ -1,27 +1,26 @@
 import "./card.scss";
 import * as React from "react";
 import "react-circular-progressbar/dist/styles.css";
-import { Autocomplete, Button, Grid, TextField } from "@mui/material";
+import { Autocomplete, Box, Button, Grid, TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ApprovalIcon from "@mui/icons-material/Approval";
-import ClearIcon from '@mui/icons-material/Clear';
+import ClearIcon from "@mui/icons-material/Clear";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 import { styled } from "@mui/material/styles";
-import { useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import axios from "../../axios";
-
+import { useFormik } from "formik";
 
 const Nomenklatur = [
-  { label: "Level 1. Akun", level: "level=1" },
-  { label: "Level 2. Kelompok", level: "level=2" },
-  { label: "Level 3. Jenis", level: "level=3" },
-  { label: "Level 4. Objek", level: "level=4" },
-  { label: "Level 5. Rincian Objek", level: "level=5" },
-  { label: "Level 6. Sub Rincian Objek", level: "level=6 "}
-
+  { label: "Akun", level: "1" },
+  { label: "Kelompok", level: "2" },
+  { label: "Jenis", level: "3" },
+  { label: "Objek", level: "4" },
+  { label: "Rincian Objek", level: "5" },
+  { label: "Sub Rincian Objek", level: "6 " },
 ];
 
 // styling Autocomplete
@@ -31,25 +30,25 @@ const StyledAutocomplete = styled(Autocomplete)({
     // This lines up the label with the initial cursor position in the input
     // after changing its padding-left.
     transform: "translate(14px, 20px) scale(1);",
-    color:"#008000;"
+    color: "#008000;",
   },
   "& .MuiAutocomplete-inputRoot": {
     color: "purple",
     // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
     '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
       // Default left padding is 6px
-      paddingLeft: 6
+      paddingLeft: 6,
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgba(224, 224, 224, 1)"
+      borderColor: "rgba(224, 224, 224, 1)",
     },
     "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "blue"
+      borderColor: "blue",
     },
     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "purple"
-    }
-  }
+      borderColor: "purple",
+    },
+  },
 });
 
 // styling DatePicker
@@ -59,18 +58,17 @@ const StyledDatePicker = styled(DatePicker)({
     // This lines up the label with the initial cursor position in the input
     // after changing its padding-left.
     transform: "translate(14px, 20px) scale(1);",
-    color:"#008000;"
+    color: "#008000;",
   },
   "& .MuiOutlinedInput-notchedOutline": {
-    borderColor: "rgba(224, 224, 224, 1)"
+    borderColor: "rgba(224, 224, 224, 1)",
   },
   "&:hover .MuiOutlinedInput-notchedOutline": {
-    borderColor: "blue"
+    borderColor: "blue",
   },
   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-    borderColor: "purple"
-  
-  }
+    borderColor: "purple",
+  },
 });
 
 function Card() {
@@ -91,106 +89,171 @@ function Card() {
       });
       setunitSkpd(unitSkpds);
     });
-
   }, []);
 
-// tanggal mulai-selesai
-const [value_mulai, setValue_mulai] = React.useState(null);
-const [value_selesai, setValue_selesai] = React.useState(null);
-
-// skpd
-const [value_skpd, setValue_skpd] = React.useState(null);
-// unit skpd
-const [value_unitSkpd, setValue_unitSkpd] = React.useState(null);
-
-
+  const formik = useFormik({
+    initialValues: {
+      skpd: null,
+      unit: null,
+      nomenklatur: "",
+      tanggal_mulai: "",
+      tanggal_selesai: "",
+    },
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
+  
   return (
-      <div className="neraca">
+    <div className="neraca">
+      <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <StyledAutocomplete
               disablePortal
-              value={value_skpd}
-              onChange={(event, newValue) => {
-                setValue_skpd(newValue);
-                console.log(newValue);
-              }}
+              name="skpd"
               id="skpd"
               options={SKPD}
-              renderInput={(params) => <TextField {...params} label="SKPD" />}
-            />
-          </Grid>
-
-          <Grid item xs={6}>
-            <StyledAutocomplete
-              disablePortal
-              value={value_unitSkpd}
-            onChange={(event, newValue) => {
-              setValue_unitSkpd(newValue);
-              console.log(newValue);
-            }}
-              id="unit"
-              options={unitSkpd}
-              renderInput={(params) => <TextField {...params} label="Unit SKPD" />}
-            />
-          </Grid>
-
-          <Grid item xs={6}>
-            <StyledAutocomplete
-              disablePortal
-              id="kodefikasi"
-              options={Nomenklatur}
-              // sx={4}
+              isOptionEqualToValue={(option, value) => option.key === value.key}
+              getOptionLabel={(option) => `${option.key} - ${option.label}`}
+              renderOption={(props, option) => (
+                <Box component="li" {...props}>
+                  {option.key} - {option.label}
+                </Box>
+              )}
+              onChange={(e, value) => {
+                formik.setFieldValue("skpd", value ? `${value.key}` :'');
+              }}
               renderInput={(params) => (
-                <TextField {...params} label="Klasifikasi, Kodefikasi dan Nomenklatur Rekening
-                " />
+                <TextField
+                  {...params}
+                  label="SKPD"
+                  onChange={formik.handleChange}
+                />
               )}
             />
           </Grid>
 
-          
+          <Grid item xs={6}>
+            <StyledAutocomplete
+              disablePortal
+              name="unit"
+              id="unit"
+              options={unitSkpd}
+              isOptionEqualToValue={(option, value) => option.key === value.key}
+              getOptionLabel={(option) => `${option.key} - ${option.label}`}
+              renderOption={(props, option) => (
+                <Box component="li" {...props}>
+                  {option.key} - {option.label}
+                </Box>
+              )}
+              onChange={(e, value) => {
+                
+                formik.setFieldValue("unit", value ? `${value.key}` : '');
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Unit SKPD"
+                  onChange={formik.handleChange}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <StyledAutocomplete
+              disablePortal
+              id="nomenklatur"
+              name="nomenklatur"
+              options={Nomenklatur}
+              getOptionLabel={(option) => `${option.level} - ${option.label}`}
+              onChange={(e, value) => {
+                formik.setFieldValue("nomenklatur", `${value.label}`);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Klasifikasi, Kodefikasi dan Nomenklatur Rekening
+                "
+                  onChange={formik.handleChange}
+                />
+              )}
+            />
+          </Grid>
           <Grid item xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <StyledDatePicker
-                label="Mulai"
-                value={value_mulai}
-              onChange={(newValue) => {
-                setValue_mulai(newValue);
-              }}
-                renderInput={(params) => <TextField {...params}  sx={{svg: { color: "#008000;" }}}/>}
+                value={formik.values.tanggal_mulai}
+                onChange={(value) =>
+                  formik.setFieldValue("tanggal_mulai", value, true)
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    sx={{ svg: { color: "#008000;" } }}
+                    label="Mulai"
+                    name="tanggal_mulai"
+                    onChange={formik.handleChange}
+                  />
+                )}
               />
             </LocalizationProvider>
           </Grid>
           <Grid item xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <StyledDatePicker
-                label="Selesai"
-                value={value_selesai}
-              onChange={(newValue) => {
-                setValue_selesai(newValue);
-              }}
-                renderInput={(params) => <TextField {...params} sx={{svg: { color: "#008000;" }}}/>}
-                />
+                value={formik.values.tanggal_selesai}
+                onChange={(value) =>
+                  formik.setFieldValue("tanggal_selesai", value, true)
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    sx={{ svg: { color: "#008000;" } }}
+                    label="Selesai"
+                    name="tanggal_selesai"
+                    onChange={formik.handleChange}
+                  />
+                )}
+              />
             </LocalizationProvider>
           </Grid>
 
           <Grid item xs={4}>
-          <Button sx={{"float": "left"}} variant="outlined" startIcon={<ApprovalIcon />}>
-            Terapkan
-          </Button>
-          <Button sx={{"margin-left":10,"float": "left"}} variant="contained" color="error" startIcon={<ClearIcon />}>
-            Reset
-          </Button>
-          <Button sx={{"margin-left":40,"float": "left"}} variant="contained" endIcon={<CloudDownloadIcon />}>
-            Excell
-          </Button>
+            <Button
+              sx={{ float: "left" }}
+              variant="outlined"
+              type="submit"
+              startIcon={<ApprovalIcon />}
+            >
+              Terapkan
+            </Button>
+            <Button
+              sx={{ "margin-left": 10, float: "left" }}
+              variant="contained"
+              color="error"
+              startIcon={<ClearIcon />}
+              type="reset"
+              onClick={ e => formik.resetForm()}
+              // onClick={ e => window.location.reload()}
+              
+            >
+              Reset
+            </Button>
+            <Button
+              sx={{ "margin-left": 40, float: "left" }}
+              variant="contained"
+              endIcon={<CloudDownloadIcon />}
+            >
+              Excell
+            </Button>
           </Grid>
-          <Grid item xs={4}>
-          </Grid>
-          
+          <Grid item xs={4}></Grid>
         </Grid>
-      </div>
+      </form>
+    </div>
   );
-};
+}
 
 export default Card;

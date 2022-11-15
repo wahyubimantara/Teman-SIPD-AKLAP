@@ -6,7 +6,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ApprovalIcon from "@mui/icons-material/Approval";
-import ClearIcon from "@mui/icons-material/Clear";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 import { styled } from "@mui/material/styles";
@@ -93,17 +92,17 @@ function Card() {
 
   const formik = useFormik({
     initialValues: {
-      skpd: null,
-      unit: null,
+      skpd: "",
+      unit: "",
       nomenklatur: "",
-      tanggal_mulai: "",
-      tanggal_selesai: "",
+      tanggal_mulai: new Date(),
+      tanggal_selesai: new Date(),
     },
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
   });
-  
+
   return (
     <div className="neraca">
       <form onSubmit={formik.handleSubmit}>
@@ -122,7 +121,7 @@ function Card() {
                 </Box>
               )}
               onChange={(e, value) => {
-                formik.setFieldValue("skpd", value ? `${value.key}` :'');
+                formik.setFieldValue("skpd", value ? `${value.key}` : "");
               }}
               renderInput={(params) => (
                 <TextField
@@ -148,8 +147,7 @@ function Card() {
                 </Box>
               )}
               onChange={(e, value) => {
-                
-                formik.setFieldValue("unit", value ? `${value.key}` : '');
+                formik.setFieldValue("unit", value ? `${value.key}` : "");
               }}
               renderInput={(params) => (
                 <TextField
@@ -167,15 +165,20 @@ function Card() {
               id="nomenklatur"
               name="nomenklatur"
               options={Nomenklatur}
+              isOptionEqualToValue={(option, value) =>
+                option.level === value.level
+              }
               getOptionLabel={(option) => `${option.level} - ${option.label}`}
               onChange={(e, value) => {
-                formik.setFieldValue("nomenklatur", `${value.label}`);
+                formik.setFieldValue(
+                  "nomenklatur",
+                  value ? `${value.label}` : ""
+                );
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Klasifikasi, Kodefikasi dan Nomenklatur Rekening
-                "
+                  label="Klasifikasi, Kodefikasi dan Nomenklatur Rekening"
                   onChange={formik.handleChange}
                 />
               )}
@@ -184,9 +187,9 @@ function Card() {
           <Grid item xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <StyledDatePicker
-                value={formik.values.tanggal_mulai}
+                value={formik.values?.tanggal_mulai}
                 onChange={(value) =>
-                  formik.setFieldValue("tanggal_mulai", value, true)
+                  formik.setFieldValue("tanggal_mulai", value.format("YYYY-MM-DD"))
                 }
                 renderInput={(params) => (
                   <TextField
@@ -203,9 +206,9 @@ function Card() {
           <Grid item xs={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <StyledDatePicker
-                value={formik.values.tanggal_selesai}
+                value={formik.values?.tanggal_selesai}
                 onChange={(value) =>
-                  formik.setFieldValue("tanggal_selesai", value, true)
+                  formik.setFieldValue("tanggal_selesai", value.format("YYYY-MM-DD"))
                 }
                 renderInput={(params) => (
                   <TextField
@@ -231,18 +234,6 @@ function Card() {
             </Button>
             <Button
               sx={{ "margin-left": 10, float: "left" }}
-              variant="contained"
-              color="error"
-              startIcon={<ClearIcon />}
-              type="reset"
-              onClick={ e => formik.resetForm()}
-              // onClick={ e => window.location.reload()}
-              
-            >
-              Reset
-            </Button>
-            <Button
-              sx={{ "margin-left": 40, float: "left" }}
               variant="contained"
               endIcon={<CloudDownloadIcon />}
             >

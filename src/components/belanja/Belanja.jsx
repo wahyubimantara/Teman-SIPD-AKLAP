@@ -1,7 +1,7 @@
 import "./belanja.scss";
 import * as React from "react";
 import "react-circular-progressbar/dist/styles.css";
-import { Autocomplete, Button, Grid, TextField } from "@mui/material";
+import { Autocomplete, Button,Box, Grid, TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -10,6 +10,7 @@ import ApprovalIcon from "@mui/icons-material/Approval";
 import { styled } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import axios from "../../axios";
+import { useFormik } from "formik";
 
 const top100Films = [
   { label: "The Shawshank Redemption", year: 1994 },
@@ -225,51 +226,75 @@ function Belanja() {
       setunitSkpd(unitSkpds);
     });
   }, []);
+  const formik = useFormik({
+    initialValues: {
+      skpd: "",
+      unit: "",
+      filter: "",
+      status_dokumen:"",
+      jenis_dokumen:"",
+      tanggal_mulai: new Date(),
+      tanggal_selesai: new Date(),
+    },
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
 
-  // tanggal mulai-selesai
-  const [value_mulai, setValue_mulai] = React.useState(null);
-  const [value_selesai, setValue_selesai] = React.useState(null);
-
-  // skpd
-  const [value_skpd, setValue_skpd] = React.useState(null);
-  // unit skpd
-  const [value_unitSkpd, setValue_unitSkpd] = React.useState(null);
-  // filter
-  const [value_filter, setValue_filter] = React.useState(null);
-  const handleChange = (event) => {
-    setValue_filter(event.target.value);
-  };
   return (
     <div className="belanja">
+      <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <StyledAutocomplete
-            disablePortal
-            value={value_skpd}
-            onChange={(event, newValue) => {
-              setValue_skpd(newValue);
-              console.log(newValue);
-            }}
-            id="skpd"
-            options={SKPD}
-            renderInput={(params) => <TextField {...params} label="SKPD" />}
-          />
+        <StyledAutocomplete
+              disablePortal
+              name="skpd"
+              id="skpd"
+              options={SKPD}
+              isOptionEqualToValue={(option, value) => option.key === value.key}
+              getOptionLabel={(option) => `${option.key} - ${option.label}`}
+              renderOption={(props, option) => (
+                <Box component="li" {...props}>
+                  {option.key} - {option.label}
+                </Box>
+              )}
+              onChange={(e, value) => {
+                formik.setFieldValue("skpd", value ? `${value.key}` : "");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="SKPD"
+                  onChange={formik.handleChange}
+                />
+              )}
+            />
         </Grid>
 
         <Grid item xs={6}>
-          <StyledAutocomplete
-            disablePortal
-            value={value_unitSkpd}
-            onChange={(event, newValue) => {
-              setValue_unitSkpd(newValue);
-              console.log(newValue);
-            }}
-            id="unit"
-            options={unitSkpd}
-            renderInput={(params) => (
-              <TextField {...params} label="Unit SKPD" />
-            )}
-          />
+        <StyledAutocomplete
+              disablePortal
+              name="unit"
+              id="unit"
+              options={unitSkpd}
+              isOptionEqualToValue={(option, value) => option.key === value.key}
+              getOptionLabel={(option) => `${option.key} - ${option.label}`}
+              renderOption={(props, option) => (
+                <Box component="li" {...props}>
+                  {option.key} - {option.label}
+                </Box>
+              )}
+              onChange={(e, value) => {
+                formik.setFieldValue("unit", value ? `${value.key}` : "");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Unit SKPD"
+                  onChange={formik.handleChange}
+                />
+              )}
+            />
         </Grid>
 
         <Grid item xs={6}>
@@ -277,37 +302,48 @@ function Belanja() {
           fullWidth
           id="filter"
           label="Filter By"
-          value={value_filter}
-          onChange={handleChange}
+          name="filter"
+          value={formik.values.filter}
+          onChange={formik.handleChange}
         />
         </Grid>
 
         <Grid item xs={3}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <StyledDatePicker
-              label="Mulai"
-              value={value_mulai}
-              onChange={(newValue) => {
-                setValue_mulai(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField {...params} sx={{ svg: { color: "#008000;" } }} />
-              )}
-            />
+          <StyledDatePicker
+                value={formik.values?.tanggal_mulai}
+                onChange={(value) =>
+                  formik.setFieldValue("tanggal_mulai", value.format("YYYY-MM-DD"))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    sx={{ svg: { color: "#008000;" } }}
+                    label="Mulai"
+                    name="tanggal_mulai"
+                    onChange={formik.handleChange}
+                  />
+                )}
+              />
           </LocalizationProvider>
         </Grid>
         <Grid item xs={3}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <StyledDatePicker
-              label="Selesai"
-              value={value_selesai}
-              onChange={(newValue) => {
-                setValue_selesai(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField {...params} sx={{ svg: { color: "#008000;" } }} />
-              )}
-            />
+          <StyledDatePicker
+                value={formik.values?.tanggal_selesai}
+                onChange={(value) =>
+                  formik.setFieldValue("tanggal_selesai", value.format("YYYY-MM-DD"))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    sx={{ svg: { color: "#008000;" } }}
+                    label="Selesai"
+                    name="tanggal_selesai"
+                    onChange={formik.handleChange}
+                  />
+                )}
+              />
           </LocalizationProvider>
         </Grid>
 
@@ -340,12 +376,14 @@ function Belanja() {
           <Button
             sx={{ float: "right" }}
             variant="outlined"
+            type="submit"
             startIcon={<ApprovalIcon />}
           >
             Terapkan
           </Button>
         </Grid>
       </Grid>
+      </form>
     </div>
   );
 }

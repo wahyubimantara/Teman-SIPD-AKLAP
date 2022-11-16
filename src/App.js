@@ -14,6 +14,7 @@ import Jurnal2Approve from "./pages/jurnal2approve/Jurnal2Approve";
 import Neraca from "./pages/neraca/Neraca";
 import Profile from "./pages/profile/Profile";
 import InputSaldoAwal from "./pages/inputsaldoawal/InputSaldoAwal";
+import JurnalUmum from "./pages/jurnalumum/JurnalUmum";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -39,6 +40,11 @@ function App() {
              {/* input saldo awal */}
              <Route path="inputSaldoAwal">
               <Route index element={<InputSaldoAwal />} />
+            </Route>
+
+            {/* jurnal umum */}
+            <Route path="jurnalumum">
+              <Route index element={<JurnalUmum />} />
             </Route>
 
             {/* jurnal to approve */}

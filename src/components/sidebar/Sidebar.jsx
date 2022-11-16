@@ -49,6 +49,12 @@ const Sidebar = () => {
               <span>Input Saldo Awal</span>
             </li>
           </Link>
+          <Link to="/jurnalumum" style={{ textDecoration: "none" }}>
+            <li>
+              <InputIcon className="icon" />
+              <span>Jurnal Umum</span>
+            </li>
+          </Link>
           <Link to="/jurnal2approve" style={{ textDecoration: "none" }}>
             <li>
               <AssignmentIcon className="icon" />

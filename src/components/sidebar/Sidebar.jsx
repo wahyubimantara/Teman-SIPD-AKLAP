@@ -13,6 +13,8 @@ import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import logo2 from '../data/logo2.png';
+import CreateIcon from '@mui/icons-material/Create';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
@@ -37,21 +39,24 @@ const Sidebar = () => {
             </Link>
           </li>
           <p className="title">Data</p>
-          <Link to="/users" style={{ textDecoration: "none" }}>
-            <li>
-              <AssignmentIcon className="icon" />
-              <span>users</span>
-            </li>
-          </Link>
+          
           <Link to="/inputsaldoawal" style={{ textDecoration: "none" }}>
             <li>
               <InputIcon className="icon" />
               <span>Input Saldo Awal</span>
             </li>
           </Link>
+
+          <Link to="/uploaddatadashboardbelanja" style={{ textDecoration: "none" }}>
+            <li>
+              <CloudUploadIcon className="icon" />
+              <span>Data Dashboard Belanja</span>
+            </li>
+          </Link>
+
           <Link to="/jurnalumum" style={{ textDecoration: "none" }}>
             <li>
-              <InputIcon className="icon" />
+              <CreateIcon className="icon" />
               <span>Jurnal Umum</span>
             </li>
           </Link>

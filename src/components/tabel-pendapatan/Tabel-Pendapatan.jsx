@@ -22,15 +22,9 @@ const TabelPendapatan = () => {
   ];
   
   const rows = [
-    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/04.0/000007/GU/7.01.0.00.0.00.44.0000/P.04/10/2022', tanggal: '14/10/2022', nilai: 35, keperluan: 'Pembayaran BPJS 4% TPP Bulan September 2022 Kecamatan Plemahan' },
-    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/04.0/000033/LS/7.01.0.00.0.00.44.0000/P.04/10/2022', tanggal: '14/10/2022', nilai: 42, keperluan: 'Pembayaran BPJS 4% TPP Bulan September 2022 Kecamatan Plemahan' },
-    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/06.0/000077/UP/7.01.0.00.0.00.44.0000/P.04/10/2022', tanggal: '14/10/2022', nilai: 45, keperluan: 'Pembayaran BPJS 4% TPP Bulan September 2022 Kecamatan Plemahan' },
-    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/06.0/000076/UP/7.01.0.00.0.00.44.0000/P.04/10/2022', tanggal: '14/10/2022', nilai: 16, keperluan: 'Pembayaran BPJS 4% TPP Bulan September 2022 Kecamatan Plemahan' },
-    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/04.0/000031/LS/7.01.0.00.0.00.44.0000/P.04/9/2022', tanggal: '14/10/2022', nilai: 77, keperluan: 'Pembayaran BPJS 4% TPP Bulan September 2022 Kecamatan Plemahan' },
-    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/06.0/000075/UP/7.01.0.00.0.00.44.0000/P.04/9/2022', tanggal: '14/10/2022', nilai: 150, keperluan: 'Pembayaran BPJS 4% TPP Bulan September 2022 Kecamatan Plemahan' },
-    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/06.0/000074/UP/7.01.0.00.0.00.44.0000/P.04/9/2022', tanggal: '14/10/2022', nilai: 44, keperluan: 'Pembayaran BPJS 4% TPP Bulan September 2022 Kecamatan Plemahan' },
-    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/06.0/000073/UP/7.01.0.00.0.00.44.0000/P.04/9/2022', tanggal: '14/10/2022', nilai: 36, keperluan: 'Pembayaran BPJS 4% TPP Bulan September 2022 Kecamatan Plemahan' },
-    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/04.0/000033/LS/7.01.0.00.0.00.44.0000/P.04/10/2022', tanggal: '14/10/2022', nilai: 65 , keperluan: 'Pembayaran BPJS 4% TPP Bulan September 2022 Kecamatan Plemahan'},
+    { id: '35.06/11.0/078081/JUR-BLJ/SP2D-GU/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/04.0/000007/GU/7.01.0.00.0.00.44.0000/P.04/10/2022', tanggal: '14/10/2022', nilai: 35, keperluan: 'Percobaan1' },
+    { id: '35.06/11.0/078082/JUR-BLJ/SP2D-LS/7.01.0.00.0.00.44.0000/10/2022', DokumenSumber: '05.09/04.0/000033/LS/7.01.0.00.0.00.44.0000/P.04/10/2022', tanggal: '14/10/2022', nilai: 42, keperluan: 'Percobaan2' },
+ 
   ];
 
   const [data, setData] = useState(rows);
@@ -65,7 +59,7 @@ const TabelPendapatan = () => {
               className="deleteButton"
               onClick={() => handleDelete(params.row.id)}
             >
-              Hapus
+              Reject
             </div>
           </div>
         );

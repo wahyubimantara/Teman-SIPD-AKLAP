@@ -1,57 +1,52 @@
 import "./inputSaldoAwal.scss";
+import { useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useState } from "react";
-import { Alert, Button, Grid } from "@mui/material";
-import excell from '../../components/data/nama_skpd_TempleteSaldoAwal.xlsx';
+import {Button, Grid } from "@mui/material";
+import excell from "../../components/data/nama_skpd_TempleteSaldoAwal.xlsx";
+import FileUpload from "../../components/FileUpload/FileUpload"
+import FileList from "../../components/FileList/FileList"
 
 const InputSaldoAwal = ({ inputs, title }) => {
-  // const onDownload = () => {
-  //   const link = document.createElement("a");
-  //   link.download = `nama_skpd_TempleteSaldoAwal.xlsx`;
-  //   link.href = {excell};
-  //   link.click();
-  // };
-  const [setFile] = useState("");
+  const [files, setFiles] = useState([]);
+  
+
+  const removeFile = (filename) => {
+    setFiles(files.filter((file) => file.name !== filename));
+  };
   return (
     <div className="new">
       <Sidebar />
       <div className="newContainer">
         <Navbar />
-        
         <div className="bottom">
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-          <a href={excell} download="nama_skpd_TempleteSaldoAwal.xlsx" target='_blank' rel="noreferrer">
-          <Button variant="contained" color="success" sx={{"float":"right"} }>
-            Download Template Excell
-            </Button>
-            </a>
-          </Grid>
-          <Grid item xs={12}>
-          <form>
-            <div className="formInput">
-              <p className="title"> Silahkan masukkan file Excell Saldo Awal</p>
-              <p className="title2"> Klik Gambar dibawah ini</p>
-              <label htmlFor="file">
-                <DriveFolderUploadOutlinedIcon className="icon" />
-              </label>
-              <input
-                type="file"
-                id="file"
-                onChange={(e) => setFile(e.target.files[0])}
-                style={{ display: "none" }}
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <a
+                href={excell}
+                download="nama_skpd_TempleteSaldoAwal.xlsx"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{ float: "right" }}
+                >
+                  Download Template Excell
+                </Button>
+              </a>
+            </Grid>
+            <Grid item xs={12}>
+            <p className="title"> Silahkan masukkan file Excell Saldo Awal</p>
+              
+              <FileUpload
+                files={files}
+                setFiles={setFiles}
+                removeFile={removeFile}
               />
-              <Alert variant="outlined"> Data sudah terupload</Alert>
-              <Alert color="error" variant="outlined">Data belum terupload </Alert>
-
-              <div className="kirim">
-                <Button variant="contained">KIRIM</Button>
-              </div>
-            </div>
-          </form>
-          </Grid>
+              <FileList files={files} removeFile={removeFile} />
+            </Grid>
           </Grid>
         </div>
       </div>

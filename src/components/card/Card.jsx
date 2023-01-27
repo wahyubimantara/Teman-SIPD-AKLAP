@@ -10,7 +10,7 @@ import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 import { styled } from "@mui/material/styles";
 import { useState, useEffect } from "react";
-import axios from "../../axios";
+import axios from "../../service/axios";
 import { useFormik } from "formik";
 
 const Nomenklatur = [

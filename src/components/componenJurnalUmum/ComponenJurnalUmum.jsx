@@ -9,7 +9,7 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 
 import { styled } from "@mui/material/styles";
 import { useState, useEffect } from "react";
-import axios from "../../axios";
+import axios from "../../service/axios";
 import { useFormik } from "formik";
 
 const Jenis_Jurnal = [

@@ -12,6 +12,7 @@ import Profile from "./pages/profile/Profile";
 import InputSaldoAwal from "./pages/inputsaldoawal/InputSaldoAwal";
 import UploadDataDashboardBelanja from "./pages/uploaddatadashboardbelanja/UploadDataDashboardBelanja";
 import JurnalUmum from "./pages/jurnalumum/JurnalUmum";
+import JurnalKoreksi from "./components/Jurnal/JurnalKoreksi";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -76,6 +77,10 @@ function App() {
             {/* profile*/}
             <Route path="profile">
               <Route index element={<Profile />} />
+            </Route>
+
+            <Route path="koreksi">
+              <Route index element={<JurnalKoreksi />} />
             </Route>
           </Route>
         </Routes>

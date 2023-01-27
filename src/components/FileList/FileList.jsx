@@ -1,4 +1,4 @@
-import axios from "../../axios";
+import axios from "../../service/axios";
 import React from 'react'
 import FileItem from './../FileItem/FileItem'
 

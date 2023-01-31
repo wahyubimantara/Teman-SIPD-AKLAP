@@ -80,12 +80,26 @@ const Sidebar = () => {
             </li>
           </Link>
           
+          <p className="title">Jurnal</p>
+          <Link to="/koreksi" style={{ textDecoration: "none" }}>
+            <li>
+              <InsertChartIcon className="icon" />
+              <span>Koreksi Belanja</span>
+            </li>
+          </Link>
+          <Link to="/jurnal_umum" style={{ textDecoration: "none" }}>
+            <li>
+              <InsertChartIcon className="icon" />
+              <span>Jurnal Umum</span>
+            </li>
+          </Link>
+        
           <p className="title">Laporan Keuangan</p>
           <Link to="/neraca" style={{ textDecoration: "none" }}>
-          <li>
-            <InsertChartIcon className="icon" />
-            <span>Neraca</span>
-          </li>
+            <li>
+              <InsertChartIcon className="icon" />
+              <span>Neraca</span>
+            </li>
           </Link>
           <Link to="/lra" style={{ textDecoration: "none" }}>
           <li>

@@ -6,10 +6,12 @@ const authService = (function() {
     authChannel.onmessage = function(e) {
         switch(e.data.event) {
             case "login":
+                localStorage.setItem("authInfo", e.data.token);
                 axios.defaults.headers.common['Authorization'] = `Bearer ${e.data.token}`;  
                 break;
             case "logout":
                 delete axios.defaults.headers.common.Authorization;
+                localStorage.removeItem('authInfo');
                 break;
             case "sync":
                 if(axios.defaults.headers.common['Authorization'] !== undefined) {
@@ -29,6 +31,8 @@ const authService = (function() {
                 const res = await axios.post('login', {userName, password})
                 console.log(res.data.accessToken)
                 axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.accessToken}`;
+                localStorage.setItem("authInfo", res.data.accessToken);
+                
                 authChannel.postMessage({
                     event: "login",
                     token: res.data.accessToken
@@ -42,6 +46,7 @@ const authService = (function() {
 
         logout: function() {
             delete axios.defaults.headers.common.Authorization;
+            localStorage.removeItem("authInfo");
             authChannel.postMessage({
                 event: "logout"
             })
@@ -52,13 +57,20 @@ const authService = (function() {
         },
 
         logged: function() {
-            return axios.defaults.headers.common['Authorization'] !== undefined;    
+            
+            return (axios.defaults.headers.common['Authorization'] !== undefined
+                && axios.defaults.headers.common['Authorization'].length > 15)||
+                !!localStorage.getItem('authInfo') 
+                
+            ;    
+            
         },
 
         sync: function() {
+            console.log('auth sync')
             let firstCallback = true;
             const callback = (token) => {
-                if(firstCallback && token !== undefined) {
+                if(firstCallback && !!token) {
                     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                     firstCallback = false;
                 }

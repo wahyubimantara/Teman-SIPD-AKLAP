@@ -5,6 +5,8 @@ if(global.axios === undefined) {
     baseURL: "http://localhost:3001/",
     //baseURL: "http://192.168.151.218:3001/",
   });
+
+  global.axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('authInfo')}`; 
 }
 
 export default global.axios;

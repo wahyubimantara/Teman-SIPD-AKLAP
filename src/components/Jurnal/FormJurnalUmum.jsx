@@ -1,5 +1,4 @@
 import { Autocomplete, Grid, TextField, Box, Button  } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import axios from "../../service/axios";
@@ -19,7 +18,6 @@ const FormJurnalKoreksi = () => {
     }
     
     const [opsi_unitSkpd, setOpsiUnitSkpd] = useState([])
-    const [opsi_subKegiatan, setOpsiSubKegiatan] = useState([])
     const [opsi_rekening, setOpsiRekening] = useState([])
     const [opsi_rekening1, setOpsiRekening1] = useState([])
 
@@ -36,7 +34,10 @@ const FormJurnalKoreksi = () => {
                 return { label: v.unitSkpd, key: v.kodeUnitSkpd };
               });
               setOpsiUnitSkpd(unitSkpds);
-        }).catch(err=>console.log(err))
+        }).catch(err=>{
+            setOpsiUnitSkpd([])
+            console.log(err)
+        })
     }, []);
 
     useEffect(()=>{
@@ -46,7 +47,10 @@ const FormJurnalKoreksi = () => {
                     return { label: v.subKegiatan, key: v.kodeSubKegiatan };
                 });
                 setOpsiSubKegiatan(items);
-            }).catch(err=>console.log(err))
+            }).catch(err=>{
+                setOpsiSubKegiatan([])
+                console.log(err)
+            })
         }
         else {
             setOpsiSubKegiatan([])
@@ -60,7 +64,10 @@ const FormJurnalKoreksi = () => {
                     return { label: v.rekening, key: v.kodeRekening };
                 });
                 setOpsiRekening(items);
-            }).catch(err=>console.log(err))
+            }).catch(err=>{
+                setOpsiRekening([])
+                console.log(err)
+            })
         }
         else {
             setOpsiRekening([])
@@ -74,7 +81,10 @@ const FormJurnalKoreksi = () => {
                     return { label: v.rekening, key: v.kodeRekening };
                 });
                 setOpsiRekening1(items);
-            }).catch(err=>console.log(err))
+            }).catch(err=>{
+                setOpsiRekening1([])
+                console.log(err)
+            })
         }
         else {
             setOpsiRekening1([])

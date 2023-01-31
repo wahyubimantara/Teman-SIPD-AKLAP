@@ -247,23 +247,23 @@ function SKPD() {
             options={akun}
             disabled={formik.values.nomenklatur<"1"}
             isOptionEqualToValue={(option, value) => option.key === value.key}
-              getOptionLabel={(option) => `${option.key} - ${option.label}`}
-              renderOption={(props, option) => (
-                <Box component="li" {...props}>
-                  {option.key} - {option.label}
-                </Box>
-              )}
-              onChange={(e, value) => {
-                formik.setFieldValue("akun", value ? `${value.key}` : "");
-                
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Akun"
-                  onChange={formik.handleChange}
-                />
-              )}
+            getOptionLabel={(option) => `${option.key} - ${option.label}`}
+            renderOption={(props, option) => (
+              <Box component="li" {...props}>
+                {option.key} - {option.label}
+              </Box>
+            )}
+            onChange={(e, value) => {
+              formik.setFieldValue("akun", value ? `${value.key}` : "");
+              
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Akun"
+                onChange={formik.handleChange}
+              />
+            )}
           />
         </Grid>
         <Grid item xs={6}>

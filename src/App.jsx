@@ -15,6 +15,7 @@ import JurnalUmum from "./pages/jurnalumum/JurnalUmum";
 import JurnalKoreksi from "./components/Jurnal/JurnalKoreksi";
 import auth from "./service/auth";
 import { Box, Card, rgbToHex, Typography } from "@mui/material"; 
+import RincianJurnal from "./components/Jurnal/RincianJurnal";
 
 const ProtectedRoute = ({ redirectPath = '/login', children }) => {
   if (!auth.logged()) {
@@ -104,6 +105,10 @@ function App() {
 
             <Route path="koreksibelanja" element={<ProtectedRoute />} >
               <Route index element={<JurnalKoreksi />} />
+            </Route>
+
+            <Route path="jurnalrinci" element={ <RincianJurnal />  } >
+              
             </Route>
 
             <Route path="*" element={<Page404 />}>

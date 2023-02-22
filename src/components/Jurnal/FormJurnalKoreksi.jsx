@@ -1,10 +1,10 @@
 import { Autocomplete, Grid, TextField, Box, Button  } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import axios from "../../service/axios";
 import Layout from "../Layout";
 import dayjs from 'dayjs';
+
 
 const FormJurnalKoreksi = () => {
     const initialValues = {
@@ -15,13 +15,20 @@ const FormJurnalKoreksi = () => {
         kodeSubKegiatan: "",
         kodeRekening: "",
         kodeSubKegiatanBaru: "",
-        kodeRekeningBaru: ""
-    }
+        kodeRekeningBaru: "",
+/*
+        kodeSubKegiatanValue: {},
+        kodeRekeningValue: {},
+        kodeSubKegiatanBaruValue: {},
+        kodeRekeningBaruValue: {}
+    */   }
     
     const [opsi_unitSkpd, setOpsiUnitSkpd] = useState([])
     const [opsi_subKegiatan, setOpsiSubKegiatan] = useState([])
     const [opsi_rekening, setOpsiRekening] = useState([])
     const [opsi_rekening1, setOpsiRekening1] = useState([])
+
+    const [tes, setTes] = useState({})
 
     const formik = useFormik({
         initialValues,
@@ -81,6 +88,9 @@ const FormJurnalKoreksi = () => {
         }
     }, [ formik.values.kodeUnitSkpd, formik.values.kodeSubKegiatanBaru ]);
 
+    useEffect(()=>{
+        console.log(tes)
+    }, [tes])
     return (
         <Layout>
             <form onSubmit={formik.handleSubmit}>
@@ -94,7 +104,7 @@ const FormJurnalKoreksi = () => {
                             id="kodeUnitSkpd"
                             options={opsi_unitSkpd}
                             autoComplete
-                            autoSelect 
+                            autoSelect
                             renderInput={ params => <TextField {...params} label="Unit SKPD" />}
                             onChange={(e, value)=>{ formik.setFieldValue('kodeUnitSkpd', value ? value.key : ''); }}
                             getOptionLabel={ option => `${option.key} - ${option.label}`}
@@ -125,6 +135,18 @@ const FormJurnalKoreksi = () => {
                             onChange={formik.handleChange}
                         />
                     </Grid>
+                    <Grid item xs={12} >
+                        <TextField
+                            fullWidth
+                            multiline
+                            name="keterangan"
+                            id="keterangan"
+                            label="Uraian"
+                            value={tes}
+                            rows={3}
+                            onChange={formik.handleChange}
+                        />
+                    </Grid>
                     <Grid item xs={12}>
                         <Autocomplete
                             name="kodeSubKegiatan"
@@ -132,7 +154,7 @@ const FormJurnalKoreksi = () => {
                             autoComplete
                             autoSelect 
                             renderInput={(params) => <TextField {...params} label="Sub Kegiatan Awal" />}
-                            onChange={(e, value)=>{ formik.setFieldValue('kodeSubKegiatan', value ? value.key : ''); }}
+                            onChange={(e, value)=>{ setTes(value); formik.setFieldValue('kodeSubKegiatan', value ? value.key : ''); }}
                             getOptionLabel={ option => `${option.key} - ${option.label}`}
                             isOptionEqualToValue={(option, value) => option.kodeSubKegiatan === value.kodeSubKegiatan }
                             
@@ -145,9 +167,10 @@ const FormJurnalKoreksi = () => {
                             autoComplete
                             autoSelect 
                             renderInput={(params) => <TextField {...params} label="Rekening Awal" />}
-                            onChange={(e, value)=>{ formik.setFieldValue('kodeRekening', value ? value.key : '') }}
+                            onChange={(e, value)=>{ formik.setFieldValue('kodeRekening', value ? value.key : '');console.log({e, value}) }}
+                            onInputChange={(e, value)=>{ console.log({evt: {e, value}}) }}
                             getOptionLabel={ option => `${option.key} - ${option.label}`}
-                            isOptionEqualToValue={(option, value) => option.kodeSubKegiatan === value.kodeSubKegiatan }
+                            isOptionEqualToValue={(option, value) => option.kodeRekening === value.kodeRekening }
                             
                         />
                     </Grid>
@@ -161,7 +184,7 @@ const FormJurnalKoreksi = () => {
                             onChange={(e, value)=>{formik.setFieldValue('kodeSubKegiatanBaru', value ? value.key : ''); }}
                             getOptionLabel={ option => `${option.key} - ${option.label}`}
                             isOptionEqualToValue={(option, value) => option.kodeSubKegiatan === value.kodeSubKegiatan }
-                            
+                            value={tes}
                     />
                     </Grid>
                     <Grid item xs={12}>
@@ -191,7 +214,8 @@ const FormJurnalKoreksi = () => {
                         <Button variant="contained" type="submit">Simpan</Button>
                     </Grid>
                     <Grid item >
-                        <Button variant="contained" color="secondary"> Batal</Button>
+                        <Button variant="contained" color="secondary"
+                        > Batal</Button>
                     </Grid>
                 </Grid>                
             </form>

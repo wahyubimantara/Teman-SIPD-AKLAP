@@ -126,7 +126,7 @@ const FormJurnalKoreksi = () => {
                         />
                     </Grid>
                     <Grid item xs={6} >
-                    <TextField
+                        <TextField
                             fullWidth
                             name="tanggal"
                             id="tanggal"
@@ -145,7 +145,6 @@ const FormJurnalKoreksi = () => {
                             onChange={(e, value)=>{ formik.setFieldValue('kodeSubKegiatan', value ? value.key : ''); }}
                             getOptionLabel={ option => `${option.key} - ${option.label}`}
                             isOptionEqualToValue={(option, value) => option.kodeSubKegiatan === value.kodeSubKegiatan }
-                            
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -158,7 +157,6 @@ const FormJurnalKoreksi = () => {
                             onChange={(e, value)=>{ formik.setFieldValue('kodeRekening', value ? value.key : '') }}
                             getOptionLabel={ option => `${option.key} - ${option.label}`}
                             isOptionEqualToValue={(option, value) => option.kodeSubKegiatan === value.kodeSubKegiatan }
-                            
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -171,8 +169,7 @@ const FormJurnalKoreksi = () => {
                             onChange={(e, value)=>{formik.setFieldValue('kodeSubKegiatanBaru', value ? value.key : ''); }}
                             getOptionLabel={ option => `${option.key} - ${option.label}`}
                             isOptionEqualToValue={(option, value) => option.kodeSubKegiatan === value.kodeSubKegiatan }
-                            
-                    />
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         <Autocomplete
@@ -184,7 +181,6 @@ const FormJurnalKoreksi = () => {
                             onChange={(e, value)=>{formik.setFieldValue('kodeRekeningBaru', value ? value.key : ''); }}
                             getOptionLabel={ option => `${option.key} - ${option.label}`}
                             isOptionEqualToValue={(option, value) => option.kodeRekening === value.kodeRekening }
-                            
                         />
                     </Grid>
                     <Grid item xs={12}>

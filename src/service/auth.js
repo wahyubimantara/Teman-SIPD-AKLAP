@@ -2,6 +2,7 @@ import axios from './axios'
 import broadcastChannels from './broadcast';
 
 const authService = (function() {    
+    
     const authChannel = broadcastChannels.getChannel('auth');
     authChannel.onmessage = function(e) {
         switch(e.data.event) {
@@ -25,7 +26,7 @@ const authService = (function() {
         }
     }
 
-    return {
+    const ret = {
         login: async function(userName, password) {
             try {
                 const res = await axios.post('login', {userName, password})
@@ -81,6 +82,9 @@ const authService = (function() {
             });
         }
     }
+
+    axios.get('/token').then(res=>{}).catch(e=>ret.logout());
+    return ret;
 })();
 
 export default authService;

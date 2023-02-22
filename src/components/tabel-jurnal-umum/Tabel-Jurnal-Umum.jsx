@@ -59,7 +59,7 @@ const actionColumn = [
     <div className="datatable">
         <div>
         <Button
-            sx={{ "margin-left": 10, float: "right" }}
+            sx={{ "margin-left": 10, "float": "right" }}
             variant="contained"
             endIcon={<ApprovalIcon />}
           >

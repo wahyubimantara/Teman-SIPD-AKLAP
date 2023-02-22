@@ -81,7 +81,7 @@ const Sidebar = () => {
           </Link>
           
           <p className="title">Jurnal</p>
-          <Link to="/koreksi" style={{ textDecoration: "none" }}>
+          <Link to="/koreksibelanja" style={{ textDecoration: "none" }}>
             <li>
               <InsertChartIcon className="icon" />
               <span>Koreksi Belanja</span>

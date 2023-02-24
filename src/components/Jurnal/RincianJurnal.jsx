@@ -1,6 +1,6 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { Autocomplete, Button, FormControl, Grid, InputLabel, Menu, MenuItem, Paper, Select, TextField } from "@mui/material";
+import { Autocomplete, Box, Button, FormControl, Grid, InputLabel, Menu, MenuItem, Paper, Select, TextField } from "@mui/material";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import "./tabel-jurnal.scss"
@@ -9,6 +9,7 @@ import numberFormat from "../../service/numberFormat";
 import { setNestedObjectValues } from "formik";
 import PropTypes from 'prop-types'
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { InputOutlined } from "@mui/icons-material";
 
 const BalanceJournalStatusComponent = (props) => {
 
@@ -57,7 +58,7 @@ const RincianJurnal = (props) => {
   ]);
 
   const columns = [
-    { field: "id", headerName: "No Urut", editable: false, sortable: false, hideable: false, filterable: false, minWidth: 40 },
+    { field: columnId, headerName: "No Urut", editable: false, sortable: false, hideable: false, filterable: false, minWidth: 40 },
     { field: "kodeRekening", headerName: "Kode Rekening", sortable: false, editable: false, hideable: false, filterable: false, minWidth: 140 },
     { field: "rekening", headerName: "Rekening", sortable: false, editable: false, hideable: false, filterable: false, minWidth: "500", flex: 1 },
     { field: "d_k", headerName: "D/K", sortable: false, editable: false, hideable: false, filterable: false, width: 30 },
@@ -110,8 +111,9 @@ const RincianJurnal = (props) => {
     Approved: 2
   }
   /// Component state 
+  const [m_jurnalId, setJurnalId] = useState('')
   const [m_editingState, setEditingState] = useState(editingStateEnum.Idle) 
-  const [m_selectedRowIds, setSelectedRowIds] = useState(rows.length > 0 ? [rows[0].id] : [])
+  const [m_selectedRowIds, setSelectedRowIds] = useState(rows.length > 0 ? [rows[0][columnId]] : [])
   const [m_editedRow, setEditedRow] = useState({})
   const isStateIdle = () => m_editingState == editingStateEnum.Idle
   const isStateNew = () => m_editingState == editingStateEnum.New
@@ -124,6 +126,7 @@ const RincianJurnal = (props) => {
   const [m_dk, setDK] = useState('D')
   const [m_rekening, setRekening] = useState({})
   const [m_nilai, setNilai] = useState(0.0)
+  const [m_nomorBukti, setNomorBukti] = useState("")
   const [m_status, setStatus] = useState(0)
 
   useEffect(()=>{
@@ -148,10 +151,6 @@ const RincianJurnal = (props) => {
     }
   }, [m_selectedRowIds])
 
-  useEffect(()=>{
-
-  }, [rows])
-  
   const handleAddClick = () => {
     const selected = rows.filter(v=>v[columnId] == m_selectedRowIds[0]) 
     setEditedRow(selected[0])
@@ -208,7 +207,7 @@ const RincianJurnal = (props) => {
     setRows(tempRows)
     onDataChange({reason: m_editingState == editingStateEnum.New ? "new" : "update", data: tempRows})
 
-    console.log(rows, tempRows)
+    //console.log(rows, tempRows)
     if(m_editingState == editingStateEnum.New) 
       setSelectedRowIds([tempRows.at(-1)[columnId]])
 
@@ -233,6 +232,7 @@ const RincianJurnal = (props) => {
   }
 
   const handleGridSelectionChange = (row_ids) => {
+    console.log(row_ids)
     setSelectedRowIds(row_ids)  
   }
 
@@ -254,73 +254,100 @@ const RincianJurnal = (props) => {
   }
 
   return (
-  <Grid rowSpacing={2} sx={{ height: "100%" }} style={{ paddingTop: 10, paddingLeft: 5, paddingRight: 5, paddingBottom: 10  }} container>
-    <Grid container item xs={12} spacing={1} >
-      <Grid item xs={12} md={2}>
-        <FormControl variant={"standard"} fullWidth>
-          <InputLabel id="label_dk">D/K</InputLabel>
-          <Select 
-              id="dk"
-              labelId="label_dk"
-              label="D/K"
-              type="number"
-              fullWidth 
-              value={m_dk}
-              onChange={handleDKChange}
-              readOnly={m_editingState==editingStateEnum.Idle}
-          >
-            <MenuItem value=""></MenuItem>
-            <MenuItem value="D">D</MenuItem>
-            <MenuItem value="K">K</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Autocomplete
-            name="kodeRekening"
+  <>
+    <input type={"hidden"} id="txt_jurnalId" name="jurnalId" value={m_jurnalId} /> 
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={8}>
+        <TextField 
+            name="noBukti"
+            label="Nomor Bukti"
             fullWidth
-            options={opsi_rekening}
-            autoComplete
-            renderInput={(params) => <TextField {...params} variant={"standard"} label="Rekening" />}
-            getOptionLabel={ option => `${option.kodeRekening} - ${option.rekening}`}
-            isOptionEqualToValue={(option, value) => option.kodeRekening === value.kodeRekening }
-            readOnly={m_editingState==editingStateEnum.Idle}
-            value={m_rekening}
-            onChange={handleRekeningChange}
-
+            readOnly
+            value={m_nomorBukti}
+            variant={"standard"}              
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField 
-            id="nilai"
-            label="Nilai"
-            type="number"
-            fullWidth 
-            value={m_nilai}
-            readOnly={m_editingState==editingStateEnum.Idle}
-            onChange={handleNilaiChange}
-            variant={"standard"}
-        />
+        <TextField label="Tanggal" name="tanggal" fullWidth type={"date"}  variant={"standard"} min={ new Date('2022/01/01')} max={new Date('2022/12/31')}  />
+      </Grid>
+      <Grid item xs={12} md={12}>
+        <TextField label="Uraian" name="keterangan" fullWidth  maxRows={3} minRows={2}  variant={"standard"}/>
       </Grid>
     </Grid>
-    <Stack style={{ height: "40px" }} spacing={1} direction="row" >
-      <Button variant="contained" sx={ isStateIdle() ? {} : { display: "none" } } disabled={disableEdit} onClick={handleAddClick}>Tambah</Button>
-      <Button variant="contained" sx={ isStateIdle() ? {} : { display: "none" } } disabled={disableEdit || m_selectedRowIds.length == 0} onClick={handleEditClick}>Edit</Button>
-      <Button variant="contained" sx={ isStateIdle() ? {} : { display: "none" } } disabled={disableEdit || m_selectedRowIds.length == 0} onClick={handleDeleteClick}>Hapus</Button>
-      <Button variant="contained" sx={ !isStateIdle() ? {} : { display: "none" } } onClick={handleSaveClick}>Simpan</Button>
-      <Button variant="contained" sx={ !isStateIdle() ? {} : { display: "none" } } onClick={handleCancelClick}>Batal</Button>
-      <Button variant="contained" sx={{ display: /*m_editingState != editingStateEnum.Idle ? */ "none" /* : "inline" */}} onClick={handleNaikkanClick}>Naikkan</Button>
-      <Button variant="contained" sx={{ display: /*m_editingState != editingStateEnum.Idle ? */ "none" /* : "inline" */}} onClick={handleTurunkanClick}>Turunkan</Button>
-    </Stack>
-    <Grid sx={{ minHeight: "400px", overflow: "auto" }} style={{ "pointerEvents": m_editingState == editingStateEnum.Idle ? "auto" : "none", paddingTop: 10, paddingBottom: 10}} container>
-      <DataGrid rows={rows} columns={columns} 
-        selectionModel={m_selectedRowIds}
-        onSelectionModelChange={handleGridSelectionChange} 
-        columnVisibilityModel={{ nilai: false, d_k: false }}>
+  
+    <Box sx={ { my: 2, padding: 2, border: '2px rgb(100, 100, 255) solid'}}>
+      <Grid>
+        <h3>Rincian Jurnal</h3>
+      </Grid>
+      <Grid rowSpacing={2} sx={{ height: "100%", py: 1 }} container>
+        <Grid container item xs={12} spacing={1} >
+          <Grid item xs={12} md={2}>
+            <FormControl variant={"standard"} fullWidth>
+              <InputLabel id="label_dk">D/K</InputLabel>
+              <Select 
+                  id="dk"
+                  labelId="label_dk"
+                  label="D/K"
+                  type="number"
+                  fullWidth 
+                  value={m_dk}
+                  onChange={handleDKChange}
+                  readOnly={!isStateNew()}
+              >
+                <MenuItem value=""></MenuItem>
+                <MenuItem value="D">D</MenuItem>
+                <MenuItem value="K">K</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Autocomplete
+                name="kodeRekening"
+                fullWidth
+                options={opsi_rekening}
+                autoComplete
+                renderInput={(params) => <TextField {...params} variant={"standard"} label="Rekening" />}
+                getOptionLabel={ option => `${option.kodeRekening} - ${option.rekening}`}
+                isOptionEqualToValue={(option, value) => option.kodeRekening === value.kodeRekening }
+                readOnly={m_editingState==editingStateEnum.Idle}
+                value={m_rekening}
+                onChange={handleRekeningChange}
 
-      </DataGrid>
-    </Grid>
-  </Grid>
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <TextField 
+                id="nilai"
+                label="Nilai"
+                type="number"
+                fullWidth 
+                value={m_nilai}
+                readOnly={m_editingState==editingStateEnum.Idle}
+                onChange={handleNilaiChange}
+                variant={"standard"}
+            />
+          </Grid>
+        </Grid>
+        <Stack  sx={{ height: "40px" }} spacing={1} direction="row" >
+          <Button variant="contained" sx={ isStateIdle() ? {} : { display: "none" } } disabled={disableEdit} onClick={handleAddClick}>Tambah</Button>
+          <Button variant="contained" sx={ isStateIdle() ? {} : { display: "none" } } disabled={disableEdit || m_selectedRowIds.length == 0} onClick={handleEditClick}>Edit</Button>
+          <Button variant="contained" sx={ isStateIdle() ? {} : { display: "none" } } disabled={disableEdit || m_selectedRowIds.length == 0} onClick={handleDeleteClick}>Hapus</Button>
+          <Button variant="contained" sx={ !isStateIdle() ? {} : { display: "none" } } onClick={handleSaveClick}>Simpan</Button>
+          <Button variant="contained" sx={ !isStateIdle() ? {} : { display: "none" } } onClick={handleCancelClick}>Batal</Button>
+          <Button variant="contained" sx={{ display: /*m_editingState != editingStateEnum.Idle ? */ "none" /* : "inline" */}} onClick={handleNaikkanClick}>Naikkan</Button>
+          <Button variant="contained" sx={{ display: /*m_editingState != editingStateEnum.Idle ? */ "none" /* : "inline" */}} onClick={handleTurunkanClick}>Turunkan</Button>
+        </Stack>
+        <Grid sx={{ minHeight: "400px", overflow: "auto" }} style={{ "pointerEvents": m_editingState == editingStateEnum.Idle ? "auto" : "none", paddingTop: 10, paddingBottom: 10}} container>
+          <DataGrid rows={rows} columns={columns} 
+            selectionModel={m_selectedRowIds}
+            onSelectionModelChange={handleGridSelectionChange} 
+            columnVisibilityModel={{ nilai: false, d_k: false }}>
+
+          </DataGrid>
+        </Grid>
+      </Grid>  
+    </Box>
+  </>
   )
 }
 

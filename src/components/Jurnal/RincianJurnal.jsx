@@ -10,9 +10,9 @@ import { setNestedObjectValues } from "formik";
 import PropTypes from 'prop-types'
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { InputOutlined } from "@mui/icons-material";
+import axios from "axios";
 
 const BalanceJournalStatusComponent = (props) => {
-
   return (
     <Box sx={{ p: 1, display: 'flex' }}>
       Status Jurnal : 
@@ -34,6 +34,35 @@ BalanceJournalStatusComponent.propTypes = {
 
 export { BalanceJournalStatusComponent }
 
+const rekeningRules = {
+  '101': {
+    D: {
+      OR: [
+        {
+          kodeRekening: {
+            startsWith: '8.1.02.01'
+          }
+        },
+        {
+          kodeRekening: {
+            startsWith: '8.1.02.88'
+          }
+        },
+        {
+          kodeRekening: {
+            startsWith: '8.1.02.99'
+          }
+        },
+      ]
+    },
+    K: {
+      kodeRekening: {
+        startsWith: '1.1.12'
+      }
+    } 
+  }
+}
+
 const RincianJurnal = (props) => {
   const emptyFn = () => {}
   const emptyArrayFn = async () => []
@@ -42,6 +71,7 @@ const RincianJurnal = (props) => {
   const rekeningDebetGetter = props.fnRekeningD || emptyArrayFn
   const rekeningKreditGetter = props.fnRekeningK || emptyArrayFn
   const disableEdit = !!props.disableEdit;
+  const shouldBalance = !!props.shouldBalance;
   
   const opsi_rekening = [
     { kodeRekening: '1.1', rekening: 'Aset Lancar' },
@@ -115,6 +145,8 @@ const RincianJurnal = (props) => {
   const [m_editingState, setEditingState] = useState(editingStateEnum.Idle) 
   const [m_selectedRowIds, setSelectedRowIds] = useState(rows.length > 0 ? [rows[0][columnId]] : [])
   const [m_editedRow, setEditedRow] = useState({})
+  const [m_unitSkpd, setUnitSkpd] = useState(undefined)
+  const [opsi_unitSkpd, setOpsiUnitSkpd] = useState([])
   const isStateIdle = () => m_editingState == editingStateEnum.Idle
   const isStateNew = () => m_editingState == editingStateEnum.New
   const isStateEdit = () => m_editingState == editingStateEnum.Edit
@@ -132,6 +164,10 @@ const RincianJurnal = (props) => {
   useEffect(()=>{
     rekeningDebetGetter().then(data=>setOpsiRekDebet(data))
     rekeningKreditGetter().then(data=>setOpsiRekKredit(data))
+
+    axios.get('unitSkpd/byuser').then(response=>{
+      setOpsiUnitSkpd(response.data.data)
+    })
   }, [])
   
   useEffect(()=>{
@@ -257,7 +293,21 @@ const RincianJurnal = (props) => {
   <>
     <input type={"hidden"} id="txt_jurnalId" name="jurnalId" value={m_jurnalId} /> 
     <Grid container spacing={2}>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={12}>
+        <TextField 
+          select
+          readOnly={opsi_unitSkpd.length>1}
+          value={m_unitSkpd}
+          label="Unit SKPD"
+        >
+          {opsi_unitSkpd.map((option)=>(
+            <MenuItem key={option.kodeUnitSkpd} value={option.kodeUnitSkpd}>
+              {option.kodeUnitSkpd} - {option.unitSkpd}
+            </MenuItem> 
+          ))}
+        </TextField>
+      </Grid>
+      <Grid item xs={12} md={2}>
         <TextField 
             name="noBukti"
             label="Nomor Bukti"
@@ -267,10 +317,66 @@ const RincianJurnal = (props) => {
             variant={"standard"}              
         />
       </Grid>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={2}>
         <TextField label="Tanggal" name="tanggal" fullWidth type={"date"}  variant={"standard"} min={ new Date('2022/01/01')} max={new Date('2022/12/31')}  />
       </Grid>
-      <Grid item xs={12} md={12}>
+      <Grid item xs={12} md={2}>
+        <FormControl variant={"standard"} fullWidth>
+          <InputLabel htmlFor="label_jenis">Jenis jurnal</InputLabel>
+          <Select 
+              native
+              id="subJenis"
+              name="subJenis"
+              labelId="label_jenis"
+              label="Jenis jurnal"
+              fullWidth 
+              value={m_jenisJurnal}
+              readOnly={!isStateNew()}
+          >
+            <optgroup label="Jurnal Umum">
+              <option value="101">Mutasi Aset Keluar</option>
+              <option value="102">Mutasi Aset Masuk</option>
+              <option value="103">Penghapusan Aset Mekanisme Penjualan di SKPKD</option>
+              <option value="104">Penghapusan Aset Mekanisme Hibah</option>
+              <option value="105">Penghapusan Aset Mekanisme Lainnya</option>
+              <option value="106">Beban dari BTT</option>
+              <option value="107">Pembayaran Utang dari BTT</option>
+              <option value="108">Aset Tetap / Lainnya dari BTT</option>
+              <option value="109">Penerimaan Aset Tetap / Lainnya dari Hibah</option>
+              <option value="110">Penerimaan Aset Lancar Non Kas dari Hibah</option>
+              <option value="199">Lainnya</option>
+            </optgroup>
+            <optgroup label="Jurnal Penyesuaian">
+              <option value="201">Persediaan Awal</option>
+              <option value="202">Persediaan Akhir</option>
+              <option value="203">Beban Dibayar Di Muka Awal</option>
+              <option value="204">Beban Dibayar Di Muka Akhir</option>
+              <option value="205">Pendapatan Diterima Di Muka Awal</option>
+              <option value="206">Pendapatan Diterima Di Muka Akhir</option>
+              <option value="207">Piutang Awal</option>
+              <option value="208">Piutang Akhir</option>
+              <option value="209">Utang Awal</option>
+              <option value="210">Utang Akhir</option>
+            </optgroup> 
+            <optgroup label="Jurnal Koreksi">
+              <option value="301">Koreksi Belanja</option>
+              <option value="302">Reklasifikasi / koreksi kode neraca</option>
+              <option value="303">Reklasifikasi KDP ke aset tetap / lainnya</option>
+              <option value="304">Koreksi saldo awal aset</option>
+              <option value="305">Koreksi saldo awal kewajiban</option>
+              <option value="306">Reklasifikasi aset tetap ke aset ekstrakomptabel/aset lancar</option>
+              <option value="307">Kapitalisasi belanja operasi</option>
+              <option value="308">Koreksi pendapatan antar SKPD</option>
+              <option value="309">Inventarisasi aset tetap / lainnya</option>
+            </optgroup>
+            <optgroup label="Jurnal Penutup">
+              <option value="499">Tutup Buku</option>
+            </optgroup>
+            
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} md={6}>
         <TextField label="Uraian" name="keterangan" fullWidth  maxRows={3} minRows={2}  variant={"standard"}/>
       </Grid>
     </Grid>

@@ -1,0 +1,43 @@
+.face {
+    display: flex;
+    width: 100%;
+    .mainContainer {       
+        flex: 6;
+    }
+    .mainContent {
+      flex: 6;
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 15px;
+      margin: 15px;
+  
+      .listTitle {
+        font-weight: 500;
+        color: gray;
+        margin-bottom: 15px;
+      }
+    }
+  }
+  
+
+.buku-besar {
+    display: flex;
+    width: 100%;
+    .listContainer {
+      flex: 6;
+    }
+    .listContainer2 {
+      flex: 6;
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 20px;
+      margin: 20px;
+  
+      .listTitle {
+        font-weight: 500;
+        color: gray;
+        margin-bottom: 15px;
+      }
+    }
+  }
+  

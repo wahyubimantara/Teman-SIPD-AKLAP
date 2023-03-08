@@ -10,7 +10,7 @@ import ApprovalIcon from "@mui/icons-material/Approval";
 
 import { styled } from "@mui/material/styles";
 import { useState , useEffect} from "react";
-import axios from "../../axios";
+import axios from "../../service/axios";
 import { useFormik } from "formik";
 // styling Autocomplete
 const StyledAutocomplete = styled(Autocomplete)({
@@ -247,23 +247,23 @@ function SKPD() {
             options={akun}
             disabled={formik.values.nomenklatur<"1"}
             isOptionEqualToValue={(option, value) => option.key === value.key}
-              getOptionLabel={(option) => `${option.key} - ${option.label}`}
-              renderOption={(props, option) => (
-                <Box component="li" {...props}>
-                  {option.key} - {option.label}
-                </Box>
-              )}
-              onChange={(e, value) => {
-                formik.setFieldValue("akun", value ? `${value.key}` : "");
-                
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Akun"
-                  onChange={formik.handleChange}
-                />
-              )}
+            getOptionLabel={(option) => `${option.key} - ${option.label}`}
+            renderOption={(props, option) => (
+              <Box component="li" {...props}>
+                {option.key} - {option.label}
+              </Box>
+            )}
+            onChange={(e, value) => {
+              formik.setFieldValue("akun", value ? `${value.key}` : "");
+              
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Akun"
+                onChange={formik.handleChange}
+              />
+            )}
           />
         </Grid>
         <Grid item xs={6}>
@@ -400,7 +400,7 @@ function SKPD() {
                 formik.setFieldValue("SubRincianObjek", value ? `${value.key}` : "");
               }}
               renderInput={(params) => (
-                <TextField
+                <TextFieldf
                   {...params}
                   label="Sub Rincian Objek"
                   onChange={formik.handleChange}

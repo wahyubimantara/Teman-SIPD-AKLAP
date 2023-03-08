@@ -22,5 +22,5 @@ const Neraca = () => {
     </div>
   )
 }
-
+  
 export default Neraca

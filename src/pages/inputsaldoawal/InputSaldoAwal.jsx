@@ -3,7 +3,6 @@ import { useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import {Button, Grid } from "@mui/material";
-import excell from "../../components/data/nama_skpd_TempleteSaldoAwal.xlsx";
 import FileUpload from "../../components/FileUpload/FileUpload"
 import FileList from "../../components/FileList/FileList"
 
@@ -23,8 +22,8 @@ const InputSaldoAwal = ({ inputs, title }) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <a
-                href={excell}
-                download="nama_skpd_TempleteSaldoAwal.xlsx"
+                href={"../../../assets/template_saldo_awal.xlsx"}
+                download="template_saldo_awal.xlsx"
                 target="_blank"
                 rel="noreferrer"
               >

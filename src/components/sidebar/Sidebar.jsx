@@ -9,15 +9,22 @@ import BookIcon from '@mui/icons-material/Book';
 import StyleIcon from '@mui/icons-material/Style';
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import InputIcon from '@mui/icons-material/Input';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import logo2 from '../data/logo2.png';
 import CreateIcon from '@mui/icons-material/Create';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import authService from "../../service/auth";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const { dispatch } = useContext(DarkModeContext);
+  const handleLogout = function(e) {
+    e.preventDefault();
+    authService.logout();    
+    navigate('/login');    
+  };
   return (
     <div className="sidebar">
       <div className="top">
@@ -73,12 +80,26 @@ const Sidebar = () => {
             </li>
           </Link>
           
+          <p className="title">Jurnal</p>
+          <Link to="/koreksibelanja" style={{ textDecoration: "none" }}>
+            <li>
+              <InsertChartIcon className="icon" />
+              <span>Koreksi Belanja</span>
+            </li>
+          </Link>
+          <Link to="/jurnal_umum" style={{ textDecoration: "none" }}>
+            <li>
+              <InsertChartIcon className="icon" />
+              <span>Jurnal Umum</span>
+            </li>
+          </Link>
+        
           <p className="title">Laporan Keuangan</p>
           <Link to="/neraca" style={{ textDecoration: "none" }}>
-          <li>
-            <InsertChartIcon className="icon" />
-            <span>Neraca</span>
-          </li>
+            <li>
+              <InsertChartIcon className="icon" />
+              <span>Neraca</span>
+            </li>
           </Link>
           <Link to="/lra" style={{ textDecoration: "none" }}>
           <li>
@@ -105,10 +126,13 @@ const Sidebar = () => {
             <span>Profile</span>
           </li>
           </Link>
-          <li>
-            <ExitToAppIcon className="icon" />
-            <span>Logout</span>
-          </li>
+          <Link to="#" onClick={handleLogout}>
+            <li>
+              <ExitToAppIcon className="icon" />
+              <span>Logout</span>
+            </li>
+          </Link>
+          
         </ul>
       </div>
       <div className="bottom">

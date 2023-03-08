@@ -10,7 +10,9 @@ import { setNestedObjectValues } from "formik";
 import PropTypes from 'prop-types'
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { InputOutlined } from "@mui/icons-material";
-import axios from "axios";
+import axios from '../../service/axios' ;
+
+import rekenings from '../../data/rekening-all.json';
 
 const BalanceJournalStatusComponent = (props) => {
   return (
@@ -33,6 +35,13 @@ BalanceJournalStatusComponent.propTypes = {
 }
 
 export { BalanceJournalStatusComponent }
+
+const rekLists = {
+  '101': {
+    'D': v => v.kodeRekening.startsWith('1.3') || v.kodeRekening.startsWith('1.5'),
+    'K': v => v.kodeRekening.startsWith('1.7')
+  } 
+}
 
 const rekeningRules = {
   '101': {
@@ -60,7 +69,61 @@ const rekeningRules = {
         startsWith: '1.1.12'
       }
     } 
-  }
+  },
+  '102': {
+    K: {
+      OR: [
+        {
+          kodeRekening: {
+            startsWith: '8.1.02.01'
+          }
+        },
+        {
+          kodeRekening: {
+            startsWith: '8.1.02.88'
+          }
+        },
+        {
+          kodeRekening: {
+            startsWith: '8.1.02.99'
+          }
+        },
+      ]
+    },
+    D: {
+      kodeRekening: {
+        startsWith: '1.1.12'
+      }
+    } 
+  },
+  '103': {
+    D: {
+      OR: [
+        {
+          kodeRekening: {
+            startsWith: '8.1.02.01'
+          }
+        },
+        {
+          kodeRekening: {
+            startsWith: '8.1.02.88'
+          }
+        },
+        {
+          kodeRekening: {
+            startsWith: '8.1.02.99'
+          }
+        },
+      ]
+    },
+    K: {
+      kodeRekening: {
+        startsWith: '1.1.12'
+      }
+    } 
+  },
+
+
 }
 
 const RincianJurnal = (props) => {
@@ -80,11 +143,11 @@ const RincianJurnal = (props) => {
   ]
 
   let [rows, setRows] = useState( props.rows || [
-    { id: 1, kodeRekening: opsi_rekening[0].kodeRekening, rekening: opsi_rekening[0].rekening, d_k: 'K', nilai: 1500},
-    { id: 2, kodeRekening: opsi_rekening[1].kodeRekening, rekening: opsi_rekening[1].rekening, d_k: 'D', nilai: 12345678901.23},
-    { id: 3, kodeRekening: opsi_rekening[2].kodeRekening, rekening: opsi_rekening[2].rekening, d_k: 'D', nilai: 1500},
-    { id: 4, kodeRekening: opsi_rekening[0].kodeRekening, rekening: opsi_rekening[0].rekening, d_k: 'D', nilai: 1500},
-    { id: 5, kodeRekening: opsi_rekening[2].kodeRekening, rekening: opsi_rekening[2].rekening, d_k: 'D', nilai: 1500},
+    // { id: 1, kodeRekening: opsi_rekening[0].kodeRekening, rekening: opsi_rekening[0].rekening, d_k: 'K', nilai: 1500},
+    // { id: 2, kodeRekening: opsi_rekening[1].kodeRekening, rekening: opsi_rekening[1].rekening, d_k: 'D', nilai: 12345678901.23},
+    // { id: 3, kodeRekening: opsi_rekening[2].kodeRekening, rekening: opsi_rekening[2].rekening, d_k: 'D', nilai: 1500},
+    // { id: 4, kodeRekening: opsi_rekening[0].kodeRekening, rekening: opsi_rekening[0].rekening, d_k: 'D', nilai: 1500},
+    // { id: 5, kodeRekening: opsi_rekening[2].kodeRekening, rekening: opsi_rekening[2].rekening, d_k: 'D', nilai: 1500},
   ]);
 
   const columns = [
@@ -146,14 +209,15 @@ const RincianJurnal = (props) => {
   const [m_selectedRowIds, setSelectedRowIds] = useState(rows.length > 0 ? [rows[0][columnId]] : [])
   const [m_editedRow, setEditedRow] = useState({})
   const [m_unitSkpd, setUnitSkpd] = useState(undefined)
+  const [m_subJenis, setSubJenis] = useState(undefined)
   const [opsi_unitSkpd, setOpsiUnitSkpd] = useState([])
   const isStateIdle = () => m_editingState == editingStateEnum.Idle
   const isStateNew = () => m_editingState == editingStateEnum.New
   const isStateEdit = () => m_editingState == editingStateEnum.Edit
   
   /// Component data
-  const [opsiRekDebet, setOpsiRekDebet] = useState([])
-  const [opsiRekKredit, setOpsiRekKredit] = useState([])
+  const [opsiRekDebet, setOpsiRekDebet] = useState(rekenings)
+  const [opsiRekKredit, setOpsiRekKredit] = useState(rekenings)
 
   const [m_dk, setDK] = useState('D')
   const [m_rekening, setRekening] = useState({})
@@ -162,8 +226,8 @@ const RincianJurnal = (props) => {
   const [m_status, setStatus] = useState(0)
 
   useEffect(()=>{
-    rekeningDebetGetter().then(data=>setOpsiRekDebet(data))
-    rekeningKreditGetter().then(data=>setOpsiRekKredit(data))
+    //rekeningDebetGetter().then(data=>setOpsiRekDebet(data))
+    //rekeningKreditGetter().then(data=>setOpsiRekKredit(data))
 
     axios.get('unitSkpd/byuser').then(response=>{
       setOpsiUnitSkpd(response.data.data)
@@ -299,6 +363,7 @@ const RincianJurnal = (props) => {
           readOnly={opsi_unitSkpd.length>1}
           value={m_unitSkpd}
           label="Unit SKPD"
+          fullWidth
         >
           {opsi_unitSkpd.map((option)=>(
             <MenuItem key={option.kodeUnitSkpd} value={option.kodeUnitSkpd}>
@@ -330,7 +395,7 @@ const RincianJurnal = (props) => {
               labelId="label_jenis"
               label="Jenis jurnal"
               fullWidth 
-              value={m_jenisJurnal}
+              value={m_subJenis}
               readOnly={!isStateNew()}
           >
             <optgroup label="Jurnal Umum">
@@ -410,7 +475,7 @@ const RincianJurnal = (props) => {
             <Autocomplete
                 name="kodeRekening"
                 fullWidth
-                options={opsi_rekening}
+                options={ m_dk == 'D' ? opsiRekDebet : opsiRekKredit}
                 autoComplete
                 renderInput={(params) => <TextField {...params} variant={"standard"} label="Rekening" />}
                 getOptionLabel={ option => `${option.kodeRekening} - ${option.rekening}`}
@@ -418,7 +483,6 @@ const RincianJurnal = (props) => {
                 readOnly={m_editingState==editingStateEnum.Idle}
                 value={m_rekening}
                 onChange={handleRekeningChange}
-
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -448,11 +512,14 @@ const RincianJurnal = (props) => {
             selectionModel={m_selectedRowIds}
             onSelectionModelChange={handleGridSelectionChange} 
             columnVisibilityModel={{ nilai: false, d_k: false }}>
-
           </DataGrid>
         </Grid>
       </Grid>  
     </Box>
+    <Stack spacing={1} direction={"row"}>
+      <Button variant="contained" >Tambah</Button>
+      <Button variant="contained" >Simpan Jurnal</Button>
+    </Stack>
   </>
   )
 }

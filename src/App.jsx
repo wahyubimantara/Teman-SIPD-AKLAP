@@ -17,6 +17,8 @@ import auth from "./service/auth";
 import { Box, Card, rgbToHex, Typography } from "@mui/material"; 
 import RincianJurnal from "./components/Jurnal/RincianJurnal";
 import JurnalPenyesuaianPersediaanAwal from "./components/Jurnal/Penyesuaian/JurnalPenyesuaianPersediaanAwal";
+import PageJurnalUmum from "./pages/jurnal/PageJurnalUmum";
+import RptSaldoAwal from "./components/SaldoAwal/RptSaldoAwal";
 
 const ProtectedRoute = ({ redirectPath = '/login', children }) => {
   if (!auth.logged()) {
@@ -56,7 +58,7 @@ function App() {
 
             {/* Upload Data Dashboard Belanja */}
             <Route path="jurnalumum" element={<ProtectedRoute/>}>
-                <Route index element={<JurnalUmum />} />
+                <Route index element={ <PageJurnalUmum /> } />
             </Route>
             
             {/* jurnal umum */}
@@ -116,6 +118,9 @@ function App() {
               
             </Route>
 
+            <Route path="saldoawal" element={<ProtectedRoute />} >
+              <Route index element={ <RptSaldoAwal /> } />
+            </Route>
             <Route path="*" element={<Page404 />}>
 
             </Route>
